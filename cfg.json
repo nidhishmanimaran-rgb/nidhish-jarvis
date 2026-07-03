@@ -1,0 +1,159 @@
+{
+  "linterOptions": {
+    "reportUnusedDisableDirectives": 1
+  },
+  "rules": {
+    "no-const-assign": [
+      1
+    ],
+    "no-this-before-super": [
+      1
+    ],
+    "no-undef": [
+      1,
+      {
+        "typeof": false
+      }
+    ],
+    "no-unreachable": [
+      1
+    ],
+    "no-unused-vars": [
+      1,
+      {
+        "vars": "all",
+        "args": "after-used",
+        "ignoreRestSiblings": false,
+        "caughtErrors": "all",
+        "ignoreClassWithStaticInitBlock": false,
+        "ignoreUsingDeclarations": false,
+        "reportUsedIgnorePattern": false
+      }
+    ],
+    "constructor-super": [
+      1
+    ],
+    "valid-typeof": [
+      1,
+      {
+        "requireStringLiterals": false
+      }
+    ]
+  },
+  "plugins": [
+    "@"
+  ],
+  "language": "@/js",
+  "languageOptions": {
+    "sourceType": "module",
+    "ecmaVersion": 2022,
+    "parser": "espree@11.2.0",
+    "parserOptions": {
+      "sourceType": "module"
+    },
+    "globals": {
+      "exports": true,
+      "global": false,
+      "module": false,
+      "require": false,
+      "__dirname": false,
+      "__filename": false,
+      "AbortController": false,
+      "AbortSignal": false,
+      "AsyncDisposableStack": false,
+      "atob": false,
+      "Blob": false,
+      "BroadcastChannel": false,
+      "btoa": false,
+      "Buffer": false,
+      "ByteLengthQueuingStrategy": false,
+      "clearImmediate": false,
+      "clearInterval": false,
+      "clearTimeout": false,
+      "CloseEvent": false,
+      "CompressionStream": false,
+      "console": false,
+      "CountQueuingStrategy": false,
+      "crypto": false,
+      "Crypto": false,
+      "CryptoKey": false,
+      "CustomEvent": false,
+      "DecompressionStream": false,
+      "DisposableStack": false,
+      "DOMException": false,
+      "ErrorEvent": false,
+      "Event": false,
+      "EventTarget": false,
+      "fetch": false,
+      "File": false,
+      "FormData": false,
+      "Headers": false,
+      "localStorage": false,
+      "MessageChannel": false,
+      "MessageEvent": false,
+      "MessagePort": false,
+      "navigator": false,
+      "Navigator": false,
+      "performance": false,
+      "Performance": false,
+      "PerformanceEntry": false,
+      "PerformanceMark": false,
+      "PerformanceMeasure": false,
+      "PerformanceObserver": false,
+      "PerformanceObserverEntryList": false,
+      "PerformanceResourceTiming": false,
+      "process": false,
+      "queueMicrotask": false,
+      "ReadableByteStreamController": false,
+      "ReadableStream": false,
+      "ReadableStreamBYOBReader": false,
+      "ReadableStreamBYOBRequest": false,
+      "ReadableStreamDefaultController": false,
+      "ReadableStreamDefaultReader": false,
+      "Request": false,
+      "Response": false,
+      "sessionStorage": false,
+      "setImmediate": false,
+      "setInterval": false,
+      "setTimeout": false,
+      "Storage": false,
+      "structuredClone": false,
+      "SubtleCrypto": false,
+      "SuppressedError": false,
+      "TextDecoder": false,
+      "TextDecoderStream": false,
+      "TextEncoder": false,
+      "TextEncoderStream": false,
+      "TransformStream": false,
+      "TransformStreamDefaultController": false,
+      "URL": false,
+      "URLPattern": false,
+      "URLSearchParams": false,
+      "WebAssembly": false,
+      "WebSocket": false,
+      "WritableStream": false,
+      "WritableStreamDefaultController": false,
+      "WritableStreamDefaultWriter": false,
+      "after": false,
+      "afterEach": false,
+      "before": false,
+      "beforeEach": false,
+      "context": false,
+      "describe": false,
+      "it": false,
+      "mocha": false,
+      "run": false,
+      "setup": false,
+      "specify": false,
+      "suite": false,
+      "suiteSetup": false,
+      "suiteTeardown": false,
+      "teardown": false,
+      "test": false,
+      "xcontext": false,
+      "xdescribe": false,
+      "xit": false,
+      "xspecify": false
+    }
+  }
+}

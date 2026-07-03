@@ -1,0 +1,109 @@
+{
+  "name": "nidhish-jarvis",
+  "displayName": "Nidhish's Jarvis",
+  "description": "A modular AI productivity platform for VS Code with conversation memory, planning, writing, coding, and plugin-ready extensibility.",
+  "version": "0.1.0",
+  "publisher": "nidhish",
+  "engines": {
+    "vscode": "^1.125.0"
+  },
+  "categories": [
+    "AI",
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:nidhish-jarvis.openAssistant",
+    "onCommand:nidhish-jarvis.exportHistory",
+    "onCommand:nidhish-jarvis.showStatus",
+    "onCommand:nidhish-jarvis.openFoundationPanel"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "nidhish-jarvis.openAssistant",
+        "title": "Jarvis: Open Assistant"
+      },
+      {
+        "command": "nidhish-jarvis.exportHistory",
+        "title": "Jarvis: Export Conversation"
+      },
+      {
+        "command": "nidhish-jarvis.showStatus",
+        "title": "Jarvis: Show Status"
+      },
+      {
+        "command": "nidhish-jarvis.openFoundationPanel",
+        "title": "Jarvis: Open Foundation Panel"
+      }
+    ],
+    "configuration": {
+      "title": "Jarvis",
+      "properties": {
+        "jarvis.provider": {
+          "type": "string",
+          "default": "ollama",
+          "description": "Selected AI provider. Ollama is the default provider when available."
+        },
+        "jarvis.model": {
+          "type": "string",
+          "default": "qwen2.5-coder:3b",
+          "description": "Preferred Ollama model or provider-specific profile."
+        },
+        "jarvis.ollama.baseUrl": {
+          "type": "string",
+          "default": "http://127.0.0.1:11434",
+          "description": "Ollama server base URL for API requests."
+        },
+        "jarvis.temperature": {
+          "type": "number",
+          "default": 0.7,
+          "minimum": 0,
+          "maximum": 2,
+          "description": "Sampling temperature for Ollama responses."
+        },
+        "jarvis.maxTokens": {
+          "type": "number",
+          "default": 1024,
+          "minimum": 1,
+          "description": "Maximum token count for Ollama responses."
+        },
+        "jarvis.streaming": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable streaming responses from Ollama when available."
+        },
+        "jarvis.memoryEnabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable conversation and workspace memory support."
+        },
+        "jarvis.maxHistory": {
+          "type": "number",
+          "default": 50,
+          "minimum": 1,
+          "description": "Maximum number of conversation turns kept in history."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "lint": "eslint extension.js assistantCore.js src test --ignore-pattern \"**/.vscode-test/**\" --ignore-pattern \"**/node_modules/**\"",
+    "pretest": "npm run lint",
+    "test": "node ./test/run-tests.js"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "24.x",
+    "@types/vscode": "^1.125.0",
+    "@vscode/test-cli": "^0.0.15",
+    "@vscode/test-electron": "^3.0.0",
+    "eslint": "^10.5.0",
+    "globals": "^16.0.0"
+  },
+  "overrides": {
+    "diff": "^8.0.4",
+    "serialize-javascript": "^7.0.6"
+  }
+}
