@@ -67,6 +67,13 @@
         },
         "jarvis.model": {
           "type": "string",
+          "enum": [
+            "qwen2.5-coder:3b",
+            "qwen2.5-coder:latest",
+            "llama3.2:3b",
+            "mistral:7b",
+            "deepseek-r1:8b"
+          ],
           "default": "qwen2.5-coder:3b",
           "description": "Preferred Ollama model or provider-specific profile."
         },
