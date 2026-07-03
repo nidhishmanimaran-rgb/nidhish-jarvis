@@ -4,6 +4,26 @@
   "description": "A modular AI productivity platform for VS Code with conversation memory, planning, writing, coding, and plugin-ready extensibility.",
   "version": "0.1.0",
   "publisher": "nidhish",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nidhishmanimaran-rgb/nidhish-jarvis.git"
+  },
+  "homepage": "https://github.com/nidhishmanimaran-rgb/nidhish-jarvis",
+  "bugs": {
+    "url": "https://github.com/nidhishmanimaran-rgb/nidhish-jarvis/issues"
+  },
+  "license": "MIT",
+  "keywords": [
+    "ai",
+    "jarvis",
+    "ollama",
+    "assistant",
+    "chat",
+    "developer",
+    "llm",
+    "productivity",
+    "coding"
+  ],
   "engines": {
     "vscode": "^1.125.0"
   },
