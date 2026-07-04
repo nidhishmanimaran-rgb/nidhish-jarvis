@@ -28,7 +28,7 @@
     "vscode": "^1.125.0"
   },
   "categories": [
-    "AI",
+    "Machine Learning",
     "Other"
   ],
   "activationEvents": [
@@ -91,7 +91,7 @@
         },
         "jarvis.maxTokens": {
           "type": "number",
-          "default": 1024,
+          "default": 512,
           "minimum": 1,
           "description": "Maximum token count for Ollama responses."
         },

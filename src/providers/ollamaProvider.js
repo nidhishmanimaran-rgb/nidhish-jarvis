@@ -3,8 +3,11 @@ const { BaseProvider } = require('./baseProvider');
 const DEFAULT_BASE_URL = 'http://127.0.0.1:11434';
 const DEFAULT_MODEL = 'qwen2.5-coder:3b';
 const DEFAULT_TEMPERATURE = 0.7;
-const DEFAULT_MAX_TOKENS = 1024;
+const DEFAULT_MAX_TOKENS = 512;
 const DEFAULT_STREAMING = true;
+const DEFAULT_KEEP_ALIVE = '2m';
+const MODEL_CACHE_TTL_MS = 30000;
+const modelCache = new Map();
 
 function normalizeBaseUrl(url) {
   if (!url) {
@@ -178,6 +181,11 @@ class OllamaProvider extends BaseProvider {
   }
 
   async discoverModels() {
+    const cached = modelCache.get(this.baseUrl);
+    if (cached && Date.now() - cached.timestamp < MODEL_CACHE_TTL_MS) {
+      return cached.models.slice();
+    }
+
     const response = await fetch(`${this.baseUrl}/api/tags`, {
       method: 'GET',
       headers: { 'content-type': 'application/json' },
@@ -194,6 +202,7 @@ class OllamaProvider extends BaseProvider {
       throw new Error('No installed Ollama models were discovered.');
     }
 
+    modelCache.set(this.baseUrl, { timestamp: Date.now(), models: models.slice() });
     return models;
   }
 
@@ -228,17 +237,20 @@ class OllamaProvider extends BaseProvider {
     const payload = {
       model,
       messages: [{ role: 'user', content: text }],
-      temperature: this.temperature,
-      max_tokens: this.maxTokens,
       stream: Boolean(this.streaming),
+      keep_alive: this.config.keepAlive || DEFAULT_KEEP_ALIVE,
+      options: {
+        temperature: this.temperature,
+        num_predict: this.maxTokens,
+      },
     };
 
-    const controller = options.signal || new AbortController();
+    const signal = options.signal?.aborted !== undefined ? options.signal : options.signal?.signal;
     const response = await fetch(`${this.baseUrl}/api/chat`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify(payload),
-      signal: controller.signal,
+      signal,
     });
 
     if (!response.ok) {

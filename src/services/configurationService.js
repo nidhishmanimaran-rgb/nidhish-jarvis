@@ -11,7 +11,7 @@ class ConfigurationService {
       debug: false,
       'ollama.baseUrl': 'http://127.0.0.1:11434',
       temperature: 0.7,
-      maxTokens: 1024,
+      maxTokens: 512,
       streaming: true,
       ...defaults,
     };

@@ -1,4 +1,4 @@
-const { ServiceContainer } = require('./core/serviceContainer');
+const { ServiceContainer } = require('./container/serviceContainer');
 const { EventBus } = require('./core/events');
 const { CommandManager } = require('./core/commandManager');
 const { CommandRegistrar } = require('./core/commandRegistrar');
@@ -11,7 +11,7 @@ const { ErrorHandler } = require('./core/errorHandler');
 const { StorageService } = require('./core/storageService');
 const { WorkspaceManager } = require('./core/workspaceManager');
 const { LifecycleManager } = require('./core/lifecycleManager');
-const { ProviderRegistry } = require('./core/providerRegistry');
+const { ProviderRegistry } = require('./services/providerService');
 const { PluginManager } = require('./core/pluginManager');
 const { TaskScheduler } = require('./core/taskScheduler');
 const { WebviewManager } = require('./core/webviewManager');
@@ -39,6 +39,19 @@ function createBootstrap(context) {
   container.register('commandRegistrar', new CommandRegistrar(context, container.resolve('commandManager')));
   container.register('stateService', new StateService());
 
+  // Assistant dependencies
+  const { AIService } = require('./services/aiService');
+  const { ConversationManager } = require('./services/conversationManager');
+  const { EventBus: FoundationEventBus } = require('./services/eventBus');
+  const { ConfigurationService: FoundationConfigurationService } = require('./services/configurationService');
+  const { AssistantWebviewHost } = require('./assistantWebviewHost');
+
+  const configurationService = new FoundationConfigurationService(context.workspaceState || context.globalState);
+  container.register('aiService', new AIService(container.resolve('providerRegistry'), container.resolve('loggingService'), configurationService));
+  container.register('conversationManager', new ConversationManager({ maxMessages: configurationService.get('maxHistory') }));
+  container.register('foundationEventBus', new FoundationEventBus());
+  container.register('assistantWebviewHost', new AssistantWebviewHost(container));
+
   return container;
 }
 
@@ -56,7 +69,8 @@ function registerCommands(container) {
   });
 
   commandRegistrar.register('nidhish-jarvis.openAssistant', async () => {
-    notificationService.info('Assistant command is pending architecture completion.');
+    const assistantHost = container.resolve('assistantWebviewHost');
+    assistantHost.open();
   });
 
   commandRegistrar.register('nidhish-jarvis.exportHistory', async () => {

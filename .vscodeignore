@@ -3,6 +3,11 @@
 test/**
 .gitignore
 .yarnrc
+*.vsix
+cfg.json
+inspect-ollama-stream.js
+query-ollama*.js
+verify-ollama.js
 vsc-extension-quickstart.md
 **/jsconfig.json
 **/*.map

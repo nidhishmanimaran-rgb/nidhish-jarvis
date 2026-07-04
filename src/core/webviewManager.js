@@ -29,6 +29,25 @@ class WebviewManager {
 
     return panel;
   }
+
+  openAssistantPanel() {
+    const panel = this.createPanel('jarvisAssistantPanel', 'Jarvis Assistant', vscode.ViewColumn.One, {
+      enableScripts: true,
+      localResourceRoots: [vscode.Uri.file(path.join(this.context.extensionPath, 'src', 'webview'))],
+    });
+
+    const htmlPath = path.join(this.context.extensionPath, 'src', 'webview', 'assistant.html');
+    const htmlContent = fs.readFileSync(htmlPath, 'utf8');
+    const assetBaseUri = panel.webview.asWebviewUri(vscode.Uri.file(path.join(this.context.extensionPath, 'src', 'webview'))).toString();
+
+    panel.webview.html = htmlContent
+      .replace(/src="(?:\.\/)?assistant\.js"/g, `src="${assetBaseUri}/assistant.js"`)
+      .replace(/href="/g, `href="${assetBaseUri}/`);
+
+    return panel;
+  }
 }
 
+
 module.exports = { WebviewManager };
+
