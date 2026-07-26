@@ -16,6 +16,7 @@ const { PluginManager } = require('./core/pluginManager');
 const { TaskScheduler } = require('./core/taskScheduler');
 const { WebviewManager } = require('./core/webviewManager');
 const { StateService } = require('./core/stateService');
+const { WorkspaceIntelligenceService } = require('./services/workspaceIntelligenceService');
 
 let containerInstance = null;
 
@@ -29,7 +30,8 @@ function createBootstrap(context) {
   container.registerFactory('configurationService', (c) => new ConfigurationService(c.resolve('storageService'), {}, vscode));
   container.registerFactory('settingsService', (c) => new SettingsService(c.resolve('configurationService')));
   container.registerFactory('errorHandler', (c) => new ErrorHandler(c.resolve('loggingService'), c.resolve('notificationService')));
-  container.registerFactory('workspaceManager', () => new WorkspaceManager(context.workspace));
+  container.register('workspaceIntelligenceService', new WorkspaceIntelligenceService());
+  container.registerFactory('workspaceManager', (c) => new WorkspaceManager(context.workspace, c.resolve('workspaceIntelligenceService')));
   container.register('providerRegistry', new ProviderRegistry());
   container.register('pluginManager', new PluginManager(container.resolve('eventBus'), container));
   container.register('taskScheduler', new TaskScheduler());
@@ -66,6 +68,23 @@ function registerCommands(container) {
 
   commandRegistrar.register('nidhish-jarvis.showStatus', async () => {
     notificationService.info('Jarvis foundation is active.');
+  });
+
+  commandRegistrar.register('nidhish-jarvis.indexWorkspace', async () => {
+    const workspaceManager = container.resolve('workspaceManager');
+    const index = await workspaceManager.indexWorkspace();
+    notificationService.info(`Jarvis indexed ${index.totals.indexedFiles} project files.`);
+    return index;
+  });
+
+  commandRegistrar.register('nidhish-jarvis.explainProject', async () => {
+    const workspaceManager = container.resolve('workspaceManager');
+    if (!workspaceManager.currentIndex) {
+      await workspaceManager.indexWorkspace();
+    }
+    const summary = workspaceManager.getProjectSummary();
+    notificationService.info(summary);
+    return summary;
   });
 
   commandRegistrar.register('nidhish-jarvis.openAssistant', async () => {

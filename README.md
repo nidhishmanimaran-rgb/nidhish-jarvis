@@ -7,6 +7,7 @@ Jarvis is a modular AI productivity platform for VS Code. It starts as a capable
 - Multi-turn conversation support with persistent history
 - Plugin-based routing for general assistance, reasoning, writing, and coding
 - Workspace-aware greetings and extensible runtime configuration
+- Workspace intelligence for indexing projects, detecting languages/frameworks, parsing symbols/imports, and summarizing architecture
 - Commands for opening the assistant, exporting history, and checking status
 - Marketplace-ready metadata and settings for future provider integration
 
@@ -15,6 +16,18 @@ Jarvis is a modular AI productivity platform for VS Code. It starts as a capable
 - Jarvis: Open Assistant
 - Jarvis: Export Conversation
 - Jarvis: Show Status
+- Jarvis: Index Workspace
+- Jarvis: Explain Project
+
+## Workspace Intelligence
+
+Jarvis can index the active workspace and build a lightweight project model that includes:
+
+- Project type, package managers, frameworks, dependencies, and dominant languages
+- Source symbols such as classes, interfaces, functions, methods, and variables
+- Import relationships between local files
+- Architecture signals from existing folders and manifests
+- Natural language search over indexed file names, summaries, imports, and symbols
 
 ## Settings
 
@@ -40,4 +53,3 @@ Run the test suite with:
 ```bash
 npm test
 ```
-

@@ -35,6 +35,8 @@
     "onCommand:nidhish-jarvis.openAssistant",
     "onCommand:nidhish-jarvis.exportHistory",
     "onCommand:nidhish-jarvis.showStatus",
+    "onCommand:nidhish-jarvis.indexWorkspace",
+    "onCommand:nidhish-jarvis.explainProject",
     "onCommand:nidhish-jarvis.openFoundationPanel"
   ],
   "main": "./extension.js",
@@ -51,6 +53,14 @@
       {
         "command": "nidhish-jarvis.showStatus",
         "title": "Jarvis: Show Status"
+      },
+      {
+        "command": "nidhish-jarvis.indexWorkspace",
+        "title": "Jarvis: Index Workspace"
+      },
+      {
+        "command": "nidhish-jarvis.explainProject",
+        "title": "Jarvis: Explain Project"
       },
       {
         "command": "nidhish-jarvis.openFoundationPanel",
