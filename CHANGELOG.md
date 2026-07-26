@@ -6,4 +6,5 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
-- Initial release
+- Added a dedicated Jarvis Activity Bar container with Chat, Workspace, Memory, Agents, Git, Terminal, and Settings webview sections.
+- Updated `Jarvis: Open Assistant` to focus the docked Chat view.

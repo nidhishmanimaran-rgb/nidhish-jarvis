@@ -17,6 +17,8 @@ const { TaskScheduler } = require('./core/taskScheduler');
 const { WebviewManager } = require('./core/webviewManager');
 const { StateService } = require('./core/stateService');
 const { WorkspaceIntelligenceService } = require('./services/workspaceIntelligenceService');
+const { VIEW_IDS } = require('./views/jarvisViewIds');
+const { createJarvisViewProviders } = require('./views/jarvisViewProviders');
 
 let containerInstance = null;
 
@@ -57,6 +59,17 @@ function createBootstrap(context) {
   return container;
 }
 
+function registerViews(container) {
+  const context = container.resolve('webviewManager').context;
+  const providers = createJarvisViewProviders(container);
+
+  Object.entries(providers).forEach(([viewId, provider]) => {
+    context.subscriptions.push(vscode.window.registerWebviewViewProvider(viewId, provider, {
+      webviewOptions: { retainContextWhenHidden: true },
+    }));
+  });
+}
+
 function registerCommands(container) {
   const commandRegistrar = container.resolve('commandRegistrar');
   const notificationService = container.resolve('notificationService');
@@ -88,8 +101,8 @@ function registerCommands(container) {
   });
 
   commandRegistrar.register('nidhish-jarvis.openAssistant', async () => {
-    const assistantHost = container.resolve('assistantWebviewHost');
-    assistantHost.open();
+    await vscode.commands.executeCommand('workbench.view.extension.nidhish-jarvis');
+    await vscode.commands.executeCommand(`${VIEW_IDS.chat}.focus`);
   });
 
   commandRegistrar.register('nidhish-jarvis.exportHistory', async () => {
@@ -99,6 +112,7 @@ function registerCommands(container) {
 
 function activate(context) {
   containerInstance = createBootstrap(context);
+  registerViews(containerInstance);
   registerCommands(containerInstance);
   return containerInstance;
 }

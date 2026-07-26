@@ -37,7 +37,14 @@
     "onCommand:nidhish-jarvis.showStatus",
     "onCommand:nidhish-jarvis.indexWorkspace",
     "onCommand:nidhish-jarvis.explainProject",
-    "onCommand:nidhish-jarvis.openFoundationPanel"
+    "onCommand:nidhish-jarvis.openFoundationPanel",
+    "onView:nidhish-jarvis.views.chat",
+    "onView:nidhish-jarvis.views.workspace",
+    "onView:nidhish-jarvis.views.memory",
+    "onView:nidhish-jarvis.views.agents",
+    "onView:nidhish-jarvis.views.git",
+    "onView:nidhish-jarvis.views.terminal",
+    "onView:nidhish-jarvis.views.settings"
   ],
   "main": "./extension.js",
   "contributes": {
@@ -67,6 +74,54 @@
         "title": "Jarvis: Open Foundation Panel"
       }
     ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "nidhish-jarvis",
+          "title": "Jarvis",
+          "icon": "media/jarvis.svg"
+        }
+      ]
+    },
+    "views": {
+      "nidhish-jarvis": [
+        {
+          "id": "nidhish-jarvis.views.chat",
+          "name": "Chat",
+          "type": "webview"
+        },
+        {
+          "id": "nidhish-jarvis.views.workspace",
+          "name": "Workspace",
+          "type": "webview"
+        },
+        {
+          "id": "nidhish-jarvis.views.memory",
+          "name": "Memory",
+          "type": "webview"
+        },
+        {
+          "id": "nidhish-jarvis.views.agents",
+          "name": "Agents",
+          "type": "webview"
+        },
+        {
+          "id": "nidhish-jarvis.views.git",
+          "name": "Git",
+          "type": "webview"
+        },
+        {
+          "id": "nidhish-jarvis.views.terminal",
+          "name": "Terminal",
+          "type": "webview"
+        },
+        {
+          "id": "nidhish-jarvis.views.settings",
+          "name": "Settings",
+          "type": "webview"
+        }
+      ]
+    },
     "configuration": {
       "title": "Jarvis",
       "properties": {

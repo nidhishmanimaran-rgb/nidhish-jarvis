@@ -30,19 +30,27 @@ class WebviewManager {
     return panel;
   }
 
+  getWebviewAssetRoot(webview) {
+    return webview.asWebviewUri(vscode.Uri.file(path.join(this.context.extensionPath, 'src', 'webview'))).toString();
+  }
+
+  getAssistantHtml(webview) {
+    const htmlPath = path.join(this.context.extensionPath, 'src', 'webview', 'assistant.html');
+    const htmlContent = fs.readFileSync(htmlPath, 'utf8');
+    const assetBaseUri = this.getWebviewAssetRoot(webview);
+
+    return htmlContent
+      .replace(/src="(?:\.\/)?assistant\.js"/g, `src="${assetBaseUri}/assistant.js"`)
+      .replace(/href="/g, `href="${assetBaseUri}/`);
+  }
+
   openAssistantPanel() {
     const panel = this.createPanel('jarvisAssistantPanel', 'Jarvis Assistant', vscode.ViewColumn.One, {
       enableScripts: true,
       localResourceRoots: [vscode.Uri.file(path.join(this.context.extensionPath, 'src', 'webview'))],
     });
 
-    const htmlPath = path.join(this.context.extensionPath, 'src', 'webview', 'assistant.html');
-    const htmlContent = fs.readFileSync(htmlPath, 'utf8');
-    const assetBaseUri = panel.webview.asWebviewUri(vscode.Uri.file(path.join(this.context.extensionPath, 'src', 'webview'))).toString();
-
-    panel.webview.html = htmlContent
-      .replace(/src="(?:\.\/)?assistant\.js"/g, `src="${assetBaseUri}/assistant.js"`)
-      .replace(/href="/g, `href="${assetBaseUri}/`);
+    panel.webview.html = this.getAssistantHtml(panel.webview);
 
     return panel;
   }

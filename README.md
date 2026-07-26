@@ -6,10 +6,25 @@ Jarvis is a modular AI productivity platform for VS Code. It starts as a capable
 
 - Multi-turn conversation support with persistent history
 - Plugin-based routing for general assistance, reasoning, writing, and coding
+- Dedicated Jarvis Activity Bar container with Chat, Workspace, Memory, Agents, Git, Terminal, and Settings views
 - Workspace-aware greetings and extensible runtime configuration
 - Workspace intelligence for indexing projects, detecting languages/frameworks, parsing symbols/imports, and summarizing architecture
 - Commands for opening the assistant, exporting history, and checking status
 - Marketplace-ready metadata and settings for future provider integration
+
+## Activity Bar
+
+Jarvis contributes a permanent Activity Bar container. Select the Jarvis icon to open the assistant workspace and switch between:
+
+- Chat
+- Workspace
+- Memory
+- Agents
+- Git
+- Terminal
+- Settings
+
+The `Jarvis: Open Assistant` command focuses the Jarvis Chat view while the legacy assistant panel remains available through the existing webview infrastructure.
 
 ## Commands
 
