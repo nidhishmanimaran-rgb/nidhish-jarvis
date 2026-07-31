@@ -32,218 +32,206 @@
     "Machine Learning",
     "Other"
   ],
-  "activationEvents": [
-    "onCommand:nidhish-jarvis.openAssistant",
-    "onCommand:nidhish-jarvis.newChat",
-    "onCommand:nidhish-jarvis.clearChat",
-    "onCommand:nidhish-jarvis.exportHistory",
-    "onCommand:nidhish-jarvis.showStatus",
-    "onCommand:nidhish-jarvis.openSettings",
-    "onCommand:nidhish-jarvis.indexWorkspace",
-    "onCommand:nidhish-jarvis.reindexWorkspace",
-    "onCommand:nidhish-jarvis.explainProject",
-    "onCommand:nidhish-jarvis.searchWorkspace",
-    "onCommand:nidhish-jarvis.findSymbol",
-    "onCommand:nidhish-jarvis.explainSymbol",
-    "onCommand:nidhish-jarvis.findReferences",
-    "onCommand:nidhish-jarvis.explainSelection",
-    "onCommand:nidhish-jarvis.fixSelection",
-    "onCommand:nidhish-jarvis.refactorSelection",
-    "onCommand:nidhish-jarvis.optimizeSelection",
-    "onCommand:nidhish-jarvis.generateTests",
-    "onCommand:nidhish-jarvis.generateDocumentation",
-    "onCommand:nidhish-jarvis.reviewCode",
-    "onCommand:nidhish-jarvis.renameAcrossProject",
-    "onCommand:nidhish-jarvis.updateImports",
-    "onCommand:nidhish-jarvis.explainError",
-    "onCommand:nidhish-jarvis.fixError",
-    "onCommand:nidhish-jarvis.analyzeProblems",
-    "onCommand:nidhish-jarvis.explainTerminalOutput",
-    "onCommand:nidhish-jarvis.runApprovedCommand",
-    "onCommand:nidhish-jarvis.explainGitChanges",
-    "onCommand:nidhish-jarvis.generateCommitMessage",
-    "onCommand:nidhish-jarvis.showGitStatus",
-    "onCommand:nidhish-jarvis.rememberProjectFact",
-    "onCommand:nidhish-jarvis.searchMemory",
-    "onCommand:nidhish-jarvis.clearMemory",
-    "onCommand:nidhish-jarvis.runAgent",
-    "onCommand:nidhish-jarvis.addApiKey",
-    "onCommand:nidhish-jarvis.removeApiKey",
-    "onCommand:nidhish-jarvis.testProvider",
-    "onCommand:nidhish-jarvis.openFoundationPanel",
-    "onView:nidhish-jarvis.views.chat",
-    "onView:nidhish-jarvis.views.workspace",
-    "onView:nidhish-jarvis.views.search",
-    "onView:nidhish-jarvis.views.files",
-    "onView:nidhish-jarvis.views.memory",
-    "onView:nidhish-jarvis.views.agents",
-    "onView:nidhish-jarvis.views.git",
-    "onView:nidhish-jarvis.views.terminal",
-    "onView:nidhish-jarvis.views.models",
-    "onView:nidhish-jarvis.views.settings"
-  ],
   "main": "./extension.js",
   "contributes": {
     "commands": [
       {
         "command": "nidhish-jarvis.openAssistant",
-        "title": "Jarvis: Open Assistant"
+        "title": "Jarvis: Open Assistant",
+        "icon": "$(hubot)"
       },
       {
         "command": "nidhish-jarvis.newChat",
-        "title": "Jarvis: New Chat"
+        "title": "Jarvis: New Chat",
+        "icon": "$(comment-add)"
       },
       {
         "command": "nidhish-jarvis.clearChat",
-        "title": "Jarvis: Clear Chat"
+        "title": "Jarvis: Clear Chat",
+        "icon": "$(clear-all)"
       },
       {
         "command": "nidhish-jarvis.exportHistory",
-        "title": "Jarvis: Export Conversation"
+        "title": "Jarvis: Export Conversation",
+        "icon": "$(export)"
       },
       {
         "command": "nidhish-jarvis.showStatus",
-        "title": "Jarvis: Show Status"
+        "title": "Jarvis: Show Status",
+        "icon": "$(pulse)"
       },
       {
         "command": "nidhish-jarvis.openSettings",
-        "title": "Jarvis: Open Settings"
+        "title": "Jarvis: Open Settings",
+        "icon": "$(settings-gear)"
       },
       {
         "command": "nidhish-jarvis.indexWorkspace",
-        "title": "Jarvis: Index Workspace"
+        "title": "Jarvis: Index Workspace",
+        "icon": "$(database)"
       },
       {
         "command": "nidhish-jarvis.reindexWorkspace",
-        "title": "Jarvis: Reindex Workspace"
+        "title": "Jarvis: Reindex Workspace",
+        "icon": "$(refresh)"
       },
       {
         "command": "nidhish-jarvis.explainProject",
-        "title": "Jarvis: Explain Project"
+        "title": "Jarvis: Explain Project",
+        "icon": "$(project)"
       },
       {
         "command": "nidhish-jarvis.searchWorkspace",
-        "title": "Jarvis: Search Workspace"
+        "title": "Jarvis: Search Workspace",
+        "icon": "$(search)"
       },
       {
         "command": "nidhish-jarvis.findSymbol",
-        "title": "Jarvis: Find Symbol"
+        "title": "Jarvis: Find Symbol",
+        "icon": "$(symbol-method)"
       },
       {
         "command": "nidhish-jarvis.explainSymbol",
-        "title": "Jarvis: Explain Symbol"
+        "title": "Jarvis: Explain Symbol",
+        "icon": "$(symbol-key)"
       },
       {
         "command": "nidhish-jarvis.findReferences",
-        "title": "Jarvis: Find References"
+        "title": "Jarvis: Find References",
+        "icon": "$(references)"
       },
       {
         "command": "nidhish-jarvis.explainSelection",
-        "title": "Jarvis: Explain Selection"
+        "title": "Jarvis: Explain Selection",
+        "icon": "$(selection)"
       },
       {
         "command": "nidhish-jarvis.fixSelection",
-        "title": "Jarvis: Fix Selection"
+        "title": "Jarvis: Fix Selection",
+        "icon": "$(wrench)"
       },
       {
         "command": "nidhish-jarvis.refactorSelection",
-        "title": "Jarvis: Refactor Selection"
+        "title": "Jarvis: Refactor Selection",
+        "icon": "$(tools)"
       },
       {
         "command": "nidhish-jarvis.optimizeSelection",
-        "title": "Jarvis: Optimize Selection"
+        "title": "Jarvis: Optimize Selection",
+        "icon": "$(rocket)"
       },
       {
         "command": "nidhish-jarvis.generateTests",
-        "title": "Jarvis: Generate Tests"
+        "title": "Jarvis: Generate Tests",
+        "icon": "$(beaker)"
       },
       {
         "command": "nidhish-jarvis.generateDocumentation",
-        "title": "Jarvis: Generate Documentation"
+        "title": "Jarvis: Generate Documentation",
+        "icon": "$(book)"
       },
       {
         "command": "nidhish-jarvis.reviewCode",
-        "title": "Jarvis: Review Code"
+        "title": "Jarvis: Review Code",
+        "icon": "$(checklist)"
       },
       {
         "command": "nidhish-jarvis.renameAcrossProject",
-        "title": "Jarvis: Rename Across Project"
+        "title": "Jarvis: Rename Across Project",
+        "icon": "$(replace-all)"
       },
       {
         "command": "nidhish-jarvis.updateImports",
-        "title": "Jarvis: Update Imports"
+        "title": "Jarvis: Update Imports",
+        "icon": "$(sync)"
       },
       {
         "command": "nidhish-jarvis.explainError",
-        "title": "Jarvis: Explain Error"
+        "title": "Jarvis: Explain Error",
+        "icon": "$(error)"
       },
       {
         "command": "nidhish-jarvis.fixError",
-        "title": "Jarvis: Fix Error"
+        "title": "Jarvis: Fix Error",
+        "icon": "$(debug)"
       },
       {
         "command": "nidhish-jarvis.analyzeProblems",
-        "title": "Jarvis: Analyze Problems"
+        "title": "Jarvis: Analyze Problems",
+        "icon": "$(issues)"
       },
       {
         "command": "nidhish-jarvis.explainTerminalOutput",
-        "title": "Jarvis: Explain Terminal Output"
+        "title": "Jarvis: Explain Terminal Output",
+        "icon": "$(terminal)"
       },
       {
         "command": "nidhish-jarvis.runApprovedCommand",
-        "title": "Jarvis: Run Approved Command"
+        "title": "Jarvis: Run Approved Command",
+        "icon": "$(play)"
       },
       {
         "command": "nidhish-jarvis.explainGitChanges",
-        "title": "Jarvis: Explain Git Changes"
+        "title": "Jarvis: Explain Git Changes",
+        "icon": "$(git-branch)"
       },
       {
         "command": "nidhish-jarvis.generateCommitMessage",
-        "title": "Jarvis: Generate Commit Message"
+        "title": "Jarvis: Generate Commit Message",
+        "icon": "$(git-commit)"
       },
       {
         "command": "nidhish-jarvis.showGitStatus",
-        "title": "Jarvis: Show Git Status"
+        "title": "Jarvis: Show Git Status",
+        "icon": "$(source-control)"
       },
       {
         "command": "nidhish-jarvis.rememberProjectFact",
-        "title": "Jarvis: Remember Project Fact"
+        "title": "Jarvis: Remember Project Fact",
+        "icon": "$(archive)"
       },
       {
         "command": "nidhish-jarvis.searchMemory",
-        "title": "Jarvis: Search Memory"
+        "title": "Jarvis: Search Memory",
+        "icon": "$(search)"
       },
       {
         "command": "nidhish-jarvis.clearMemory",
-        "title": "Jarvis: Clear Memory"
+        "title": "Jarvis: Clear Memory",
+        "icon": "$(trash)"
       },
       {
         "command": "nidhish-jarvis.runAgent",
-        "title": "Jarvis: Run Agent"
+        "title": "Jarvis: Run Agent",
+        "icon": "$(debug)"
       },
       {
         "command": "nidhish-jarvis.addApiKey",
-        "title": "Jarvis: Add API Key"
+        "title": "Jarvis: Add API Key",
+        "icon": "$(key)"
       },
       {
         "command": "nidhish-jarvis.removeApiKey",
-        "title": "Jarvis: Remove API Key"
+        "title": "Jarvis: Remove API Key",
+        "icon": "$(key)"
       },
       {
         "command": "nidhish-jarvis.testProvider",
-        "title": "Jarvis: Test Provider Connection"
+        "title": "Jarvis: Test Provider Connection",
+        "icon": "$(plug)"
       },
       {
         "command": "nidhish-jarvis.openFoundationPanel",
-        "title": "Jarvis: Open Foundation Panel"
+        "title": "Jarvis: Open Foundation Panel",
+        "icon": "$(layout)"
       }
     ],
     "viewsContainers": {
       "activitybar": [
         {
           "id": "nidhish-jarvis",
-          "title": "Jarvis",
-          "icon": "media/jarvis.svg"
+          "title": "Nidhish's Jarvis",
+          "icon": "media/jarvis-activity.svg"
         }
       ]
     },

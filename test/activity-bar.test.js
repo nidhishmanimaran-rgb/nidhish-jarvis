@@ -8,8 +8,8 @@ suite('Activity bar integration', () => {
     const jarvis = containers.find((container) => container.id === 'nidhish-jarvis');
 
     assert.ok(jarvis);
-    assert.strictEqual(jarvis.title, 'Jarvis');
-    assert.strictEqual(jarvis.icon, 'media/jarvis.svg');
+    assert.strictEqual(jarvis.title, "Nidhish's Jarvis");
+    assert.strictEqual(jarvis.icon, 'media/jarvis-activity.svg');
   });
 
   test('registers all Jarvis webview sections', () => {
@@ -31,9 +31,10 @@ suite('Activity bar integration', () => {
     assert.ok(views.every((view) => view.type === 'webview'));
   });
 
-  test('activates when Jarvis views are opened', () => {
+  test('relies on generated activation events for contributed views', () => {
+    assert.strictEqual(packageManifest.activationEvents, undefined);
     Object.values(VIEW_IDS).forEach((viewId) => {
-      assert.ok(packageManifest.activationEvents.includes(`onView:${viewId}`));
+      assert.ok(packageManifest.contributes.views['nidhish-jarvis'].some((view) => view.id === viewId));
     });
   });
 
