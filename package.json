@@ -2,7 +2,7 @@
   "name": "nidhish-jarvis",
   "displayName": "Nidhish's Jarvis",
   "description": "A modular AI productivity platform for VS Code with conversation memory, planning, writing, coding, and plugin-ready extensibility.",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "publisher": "NidhishKumaran",
   "icon": "icon.png",
   "repository": {
