@@ -1,4 +1,5 @@
 const { spawn } = require('child_process');
+const vscode = require('vscode');
 
 function ensureDisposed(disposables = []) {
   for (const d of disposables) {
@@ -108,6 +109,16 @@ class AssistantWebviewHost {
         return;
       }
 
+      if (message.type === 'assistant:insertCode') {
+        await this.insertCode(message.code);
+        return;
+      }
+
+      if (message.type === 'assistant:replaceSelection') {
+        await this.replaceSelection(message.code);
+        return;
+      }
+
       if (message.type === 'assistant:ask') {
         const text = message.value;
         const controller = new AbortController();
@@ -120,7 +131,8 @@ class AssistantWebviewHost {
 
           const config = getRequestConfig(message);
 
-          const result = await aiService.ask(text, {
+          const prompt = await this.buildPromptWithContext(text);
+          const result = await aiService.ask(prompt, {
             ...(config ? { config } : {}),
             signal: controller,
             // We support streaming by using provider onChunk if available.
@@ -172,6 +184,62 @@ class AssistantWebviewHost {
       this.activeController = null;
       this.panel = null;
     });
+  }
+
+  async insertCode(code) {
+    const editor = vscode.window.activeTextEditor;
+    if (!editor) {
+      vscode.window.showWarningMessage('Open a file before inserting generated code.');
+      return false;
+    }
+    const value = String(code || '');
+    if (!value) {
+      return false;
+    }
+    await editor.edit((editBuilder) => {
+      editBuilder.insert(editor.selection.active, value);
+    });
+    return true;
+  }
+
+  async replaceSelection(code) {
+    const editor = vscode.window.activeTextEditor;
+    if (!editor) {
+      vscode.window.showWarningMessage('Open a file before replacing code.');
+      return false;
+    }
+    if (editor.selection.isEmpty) {
+      vscode.window.showWarningMessage('Select code before using Replace Selection.');
+      return false;
+    }
+    const value = String(code || '');
+    if (!value) {
+      return false;
+    }
+    await editor.edit((editBuilder) => {
+      editBuilder.replace(editor.selection, value);
+    });
+    return true;
+  }
+
+  async buildPromptWithContext(text) {
+    const value = String(text || '');
+    let workspaceManager = null;
+    try {
+      workspaceManager = this.container.resolve('workspaceManager');
+      if (/@workspace\b/i.test(value) && !workspaceManager.currentIndex) {
+        await workspaceManager.indexWorkspace();
+      }
+      const contextBuilder = this.container.resolve('contextBuilder');
+      const memories = this.container.resolve('memoryManager')?.search?.(value, { limit: 5 }) || [];
+      const built = contextBuilder.build(value, { workspaceManager, memories });
+      if (!built.promptPrefix) {
+        return value;
+      }
+      return `${built.promptPrefix}\n\n[User Request]\n${value}`;
+    } catch {
+      return value;
+    }
   }
 
   async postModelStatus(panel) {

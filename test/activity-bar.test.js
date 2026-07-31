@@ -19,10 +19,13 @@ suite('Activity bar integration', () => {
     assert.deepStrictEqual(ids, [
       VIEW_IDS.chat,
       VIEW_IDS.workspace,
+      VIEW_IDS.search,
+      VIEW_IDS.files,
       VIEW_IDS.memory,
       VIEW_IDS.agents,
       VIEW_IDS.git,
       VIEW_IDS.terminal,
+      VIEW_IDS.models,
       VIEW_IDS.settings,
     ]);
     assert.ok(views.every((view) => view.type === 'webview'));
@@ -32,5 +35,20 @@ suite('Activity bar integration', () => {
     Object.values(VIEW_IDS).forEach((viewId) => {
       assert.ok(packageManifest.activationEvents.includes(`onView:${viewId}`));
     });
+  });
+
+  test('contributes editor submenu and core command palette actions', () => {
+    const commands = new Set(packageManifest.contributes.commands.map((entry) => entry.command));
+    [
+      'nidhish-jarvis.newChat',
+      'nidhish-jarvis.clearChat',
+      'nidhish-jarvis.openSettings',
+      'nidhish-jarvis.explainSelection',
+      'nidhish-jarvis.fixSelection',
+      'nidhish-jarvis.explainGitChanges',
+      'nidhish-jarvis.generateCommitMessage',
+    ].forEach((command) => assert.ok(commands.has(command), command));
+    assert.ok(packageManifest.contributes.menus['editor/context'].some((entry) => entry.submenu === 'nidhish-jarvis.editorMenu'));
+    assert.ok(packageManifest.contributes.menus['explorer/context'].some((entry) => entry.command === 'nidhish-jarvis.indexWorkspace'));
   });
 });

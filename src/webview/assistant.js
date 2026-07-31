@@ -834,6 +834,12 @@ function handleCodeAction(button) {
   if (action === 'copy-code') {
     copyText(code);
     setStatus('Code copied');
+  } else if (action === 'insert-code') {
+    vscode.postMessage({ type: 'assistant:insertCode', code, language });
+    setStatus('Inserting code');
+  } else if (action === 'replace-selection') {
+    vscode.postMessage({ type: 'assistant:replaceSelection', code, language });
+    setStatus('Replacing selection');
   } else if (action === 'download-code') {
     downloadText(`jarvis-snippet.${extensionForLanguage(language)}`, code, 'text/plain');
   } else if (action === 'toggle-code') {
@@ -1309,6 +1315,8 @@ function renderCodeBlock(code, language) {
     `    <span class="code-language">${escapeHtml(safeLanguage)}</span>`,
     '    <div class="code-actions">',
     '      <button type="button" data-code-action="copy-code">Copy</button>',
+    '      <button type="button" data-code-action="insert-code">Insert</button>',
+    '      <button type="button" data-code-action="replace-selection">Replace</button>',
     '      <button type="button" data-code-action="download-code">Download</button>',
     '      <button type="button" data-code-action="toggle-code">Collapse</button>',
     '    </div>',

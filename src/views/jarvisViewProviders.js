@@ -1,6 +1,11 @@
 const path = require('path');
+const crypto = require('crypto');
 const vscode = require('vscode');
 const { VIEW_IDS } = require('./jarvisViewIds');
+
+function createNonce() {
+  return crypto.randomBytes(16).toString('base64');
+}
 
 class JarvisChatViewProvider {
   constructor(container) {
@@ -28,18 +33,26 @@ class JarvisSummaryViewProvider {
 
   async resolveWebviewView(webviewView) {
     webviewView.webview.options = { enableScripts: true };
-    webviewView.webview.html = await this.renderHtml();
+    webviewView.webview.html = await this.renderHtml(webviewView.webview);
     webviewView.webview.onDidReceiveMessage(async (message) => {
-      if (message?.type === 'jarvis:command' && message.command) {
+      const allowedCommands = new Set((this.definition.actions || []).map((action) => action.command));
+      if (message?.type === 'jarvis:command' && allowedCommands.has(message.command)) {
         await vscode.commands.executeCommand(message.command);
       }
     });
   }
 
-  async renderHtml() {
+  async renderHtml(webview) {
     const state = await this.definition.getState?.(this.container);
     const actions = this.definition.actions || [];
     const cards = this.definition.cards || [];
+    const nonce = createNonce();
+    const csp = [
+      "default-src 'none'",
+      `style-src 'nonce-${nonce}'`,
+      `script-src 'nonce-${nonce}'`,
+      `img-src ${webview.cspSource} https: data:`,
+    ].join('; ');
 
     return [
       '<!DOCTYPE html>',
@@ -47,8 +60,9 @@ class JarvisSummaryViewProvider {
       '<head>',
       '  <meta charset="UTF-8" />',
       '  <meta name="viewport" content="width=device-width, initial-scale=1.0" />',
+      `  <meta http-equiv="Content-Security-Policy" content="${escapeAttribute(csp)}" />`,
       `  <title>${escapeHtml(this.definition.title)}</title>`,
-      '  <style>',
+      `  <style nonce="${escapeAttribute(nonce)}">`,
       viewCss(),
       '  </style>',
       '</head>',
@@ -60,7 +74,7 @@ class JarvisSummaryViewProvider {
       `    <section class="actions">${actions.map(renderAction).join('')}</section>`,
       `    <section class="cards">${cards.map(renderCard).join('')}</section>`,
       '  </main>',
-      '  <script>',
+      `  <script nonce="${escapeAttribute(nonce)}">`,
       '    const vscode = acquireVsCodeApi();',
       '    document.addEventListener("click", (event) => {',
       '      const button = event.target.closest("[data-command]");',
@@ -81,7 +95,10 @@ function createJarvisViewProviders(container) {
       description: 'Index, summarize, and search the active project.',
       actions: [
         { label: 'Index Workspace', command: 'nidhish-jarvis.indexWorkspace' },
+        { label: 'Reindex Workspace', command: 'nidhish-jarvis.reindexWorkspace' },
         { label: 'Explain Project', command: 'nidhish-jarvis.explainProject' },
+        { label: 'Semantic Search', command: 'nidhish-jarvis.searchWorkspace' },
+        { label: 'Find Symbol', command: 'nidhish-jarvis.findSymbol' },
       ],
       getState: async (c) => {
         const workspaceManager = c.resolve('workspaceManager');
@@ -101,36 +118,145 @@ function createJarvisViewProviders(container) {
         { title: 'Architecture', body: 'Jarvis detects source, service, provider, core, test, and webview layers.' },
       ],
     }),
+    [VIEW_IDS.search]: new JarvisSummaryViewProvider(container, {
+      title: 'Search',
+      description: 'Search indexed files and symbols in the active workspace.',
+      actions: [
+        { label: 'Search Workspace', command: 'nidhish-jarvis.searchWorkspace' },
+        { label: 'Find Symbol', command: 'nidhish-jarvis.findSymbol' },
+        { label: 'Explain Symbol', command: 'nidhish-jarvis.explainSymbol' },
+        { label: 'Find References', command: 'nidhish-jarvis.findReferences' },
+      ],
+      getState: async (c) => {
+        const workspaceManager = c.resolve('workspaceManager');
+        const index = workspaceManager.currentIndex;
+        return index ? [
+          ['Index', `${index.totals.indexedFiles} files ready`],
+          ['Symbols', String(index.symbolIndex.length)],
+          ['Relationships', String(index.graph.edges.length)],
+        ] : [
+          ['Index', 'Workspace not indexed yet'],
+          ['Next step', 'Run Search Workspace to index and search'],
+        ];
+      },
+      cards: [
+        { title: 'Hybrid Search', body: 'Search currently ranks file names, summaries, imports, symbols, comments, and code text.' },
+        { title: 'Symbol Navigation', body: 'Symbol search returns indexed names with file and line metadata.' },
+      ],
+    }),
+    [VIEW_IDS.files]: new JarvisSummaryViewProvider(container, {
+      title: 'Files',
+      description: 'Inspect indexed source files and local relationship coverage.',
+      actions: [
+        { label: 'Index Workspace', command: 'nidhish-jarvis.indexWorkspace' },
+        { label: 'Reindex Workspace', command: 'nidhish-jarvis.reindexWorkspace' },
+        { label: 'Explain Project', command: 'nidhish-jarvis.explainProject' },
+      ],
+      getState: async (c) => {
+        const workspaceManager = c.resolve('workspaceManager');
+        const index = workspaceManager.currentIndex;
+        if (!index) {
+          return [
+            ['Files', 'Workspace not indexed yet'],
+            ['Next step', 'Run Index Workspace'],
+          ];
+        }
+
+        const topLanguages = index.project.languages
+          .slice(0, 3)
+          .map((entry) => `${entry.language} (${entry.count})`)
+          .join(', ');
+        return [
+          ['Indexed files', String(index.totals.indexedFiles)],
+          ['Total scanned', String(index.totals.files)],
+          ['Top languages', topLanguages || 'Unknown'],
+          ['Import links', String(index.graph.edges.length)],
+        ];
+      },
+      cards: [
+        { title: 'Ignored Folders', body: 'Jarvis skips dependency, build, cache, and VCS folders during indexing.' },
+        { title: 'File Metadata', body: 'Indexed files include language, summary, imports, exports, symbols, and line counts.' },
+      ],
+    }),
     [VIEW_IDS.memory]: new JarvisSummaryViewProvider(container, {
       title: 'Memory',
-      description: 'Conversation, project, and user memory will live here as Jarvis learns preferences.',
+      description: 'Review what Jarvis can retain and control memory behavior.',
+      actions: [
+        { label: 'Remember Project Fact', command: 'nidhish-jarvis.rememberProjectFact' },
+        { label: 'Search Memory', command: 'nidhish-jarvis.searchMemory' },
+        { label: 'Clear Memory', command: 'nidhish-jarvis.clearMemory' },
+      ],
+      getState: async (c) => {
+        const memoryManager = c.resolve('memoryManager');
+        const entries = memoryManager.list();
+        return [
+          ['Status', memoryManager.enabled ? 'Enabled' : 'Disabled'],
+          ['Entries', String(entries.length)],
+          ['Project memories', String(entries.filter((entry) => entry.type === 'project').length)],
+        ];
+      },
       cards: [
-        { title: 'Conversation Memory', body: 'Chat history is retained by the existing conversation manager.' },
-        { title: 'Workspace Memory', body: 'Project architecture and conventions are ready for the next memory milestone.' },
+        { title: 'Conversation Memory', body: 'Chat history is retained separately by the conversation manager.' },
+        { title: 'Project Memory', body: 'Project facts can be saved, searched, deleted, or cleared without storing provider secrets.' },
       ],
     }),
     [VIEW_IDS.agents]: new JarvisSummaryViewProvider(container, {
       title: 'Agents',
-      description: 'Specialized coding, review, debugging, testing, and documentation agents.',
+      description: 'Run focused Jarvis workflows as they become available.',
+      actions: [
+        { label: 'Run Agent', command: 'nidhish-jarvis.runAgent' },
+      ],
+      getState: async (c) => {
+        const agents = c.resolve('agentManager').list();
+        return [
+          ['Registered agents', String(agents.length)],
+          ['Available', agents.map((agent) => agent.id).join(', ')],
+        ];
+      },
       cards: [
-        { title: 'Coding Agent', body: 'Plans and implements tasks through the assistant core.' },
-        { title: 'Review Agent', body: 'Reviews code, tests, and security posture in a future milestone.' },
+        { title: 'Shared Runtime', body: 'Agents reuse the Context Builder and provider layer.' },
+        { title: 'Safety', body: 'Agents route source modifications through safe edit and diff approval flows.' },
       ],
     }),
     [VIEW_IDS.git]: new JarvisSummaryViewProvider(container, {
       title: 'Git',
-      description: 'Natural-language Git workflows, commit summaries, and diff explanations.',
+      description: 'Inspect repository state and prepare safe Git assistance.',
+      actions: [
+        { label: 'Show Git Status', command: 'nidhish-jarvis.showGitStatus' },
+        { label: 'Explain Git Changes', command: 'nidhish-jarvis.explainGitChanges' },
+        { label: 'Generate Commit Message', command: 'nidhish-jarvis.generateCommitMessage' },
+      ],
       cards: [
-        { title: 'Repository State', body: 'Git commands will be routed through approved command flows.' },
-        { title: 'Change Summaries', body: 'Jarvis will generate commit messages and PR summaries.' },
+        { title: 'Repository State', body: 'Jarvis reads Git status and diffs without running destructive Git operations.' },
+        { title: 'Change Summaries', body: 'Jarvis can explain diffs and generate commit-message suggestions from local changes.' },
       ],
     }),
     [VIEW_IDS.terminal]: new JarvisSummaryViewProvider(container, {
       title: 'Terminal',
-      description: 'Command suggestions, approved execution, log explanation, and background tasks.',
+      description: 'Prepare command assistance with explicit safety boundaries.',
       cards: [
-        { title: 'Safe Execution', body: 'Commands will require user approval before running.' },
-        { title: 'Diagnostics', body: 'Terminal output will feed debugging and fix suggestions.' },
+        { title: 'Safe Execution', body: 'Jarvis does not run terminal commands from this view yet.' },
+        { title: 'Diagnostics', body: 'Terminal-output analysis is not enabled until a capture and approval model is added.' },
+      ],
+    }),
+    [VIEW_IDS.models]: new JarvisSummaryViewProvider(container, {
+      title: 'Models',
+      description: 'Review the active provider and model configuration.',
+      actions: [
+        { label: 'Open VS Code Settings', command: 'workbench.action.openSettings' },
+      ],
+      getState: async (c) => {
+        const configurationService = c.resolve('configurationService');
+        return [
+          ['Provider', configurationService.get('provider')],
+          ['Model', configurationService.get('model')],
+          ['Ollama URL', configurationService.get('ollama.baseUrl')],
+          ['Streaming', String(configurationService.get('streaming'))],
+        ];
+      },
+      cards: [
+        { title: 'Local First', body: 'Ollama is the default provider and is checked by the chat view before sending requests.' },
+        { title: 'Secrets', body: 'No cloud API keys are stored by the current provider implementation.' },
       ],
     }),
     [VIEW_IDS.settings]: new JarvisSummaryViewProvider(container, {

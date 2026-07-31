@@ -2,8 +2,9 @@
   "name": "nidhish-jarvis",
   "displayName": "Nidhish's Jarvis",
   "description": "A modular AI productivity platform for VS Code with conversation memory, planning, writing, coding, and plugin-ready extensibility.",
-  "version": "0.1.0",
-  "publisher": "nidhish",
+  "version": "0.1.1",
+  "publisher": "NidhishKumaran",
+  "icon": "icon.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/nidhishmanimaran-rgb/nidhish-jarvis.git"
@@ -33,17 +34,52 @@
   ],
   "activationEvents": [
     "onCommand:nidhish-jarvis.openAssistant",
+    "onCommand:nidhish-jarvis.newChat",
+    "onCommand:nidhish-jarvis.clearChat",
     "onCommand:nidhish-jarvis.exportHistory",
     "onCommand:nidhish-jarvis.showStatus",
+    "onCommand:nidhish-jarvis.openSettings",
     "onCommand:nidhish-jarvis.indexWorkspace",
+    "onCommand:nidhish-jarvis.reindexWorkspace",
     "onCommand:nidhish-jarvis.explainProject",
+    "onCommand:nidhish-jarvis.searchWorkspace",
+    "onCommand:nidhish-jarvis.findSymbol",
+    "onCommand:nidhish-jarvis.explainSymbol",
+    "onCommand:nidhish-jarvis.findReferences",
+    "onCommand:nidhish-jarvis.explainSelection",
+    "onCommand:nidhish-jarvis.fixSelection",
+    "onCommand:nidhish-jarvis.refactorSelection",
+    "onCommand:nidhish-jarvis.optimizeSelection",
+    "onCommand:nidhish-jarvis.generateTests",
+    "onCommand:nidhish-jarvis.generateDocumentation",
+    "onCommand:nidhish-jarvis.reviewCode",
+    "onCommand:nidhish-jarvis.renameAcrossProject",
+    "onCommand:nidhish-jarvis.updateImports",
+    "onCommand:nidhish-jarvis.explainError",
+    "onCommand:nidhish-jarvis.fixError",
+    "onCommand:nidhish-jarvis.analyzeProblems",
+    "onCommand:nidhish-jarvis.explainTerminalOutput",
+    "onCommand:nidhish-jarvis.runApprovedCommand",
+    "onCommand:nidhish-jarvis.explainGitChanges",
+    "onCommand:nidhish-jarvis.generateCommitMessage",
+    "onCommand:nidhish-jarvis.showGitStatus",
+    "onCommand:nidhish-jarvis.rememberProjectFact",
+    "onCommand:nidhish-jarvis.searchMemory",
+    "onCommand:nidhish-jarvis.clearMemory",
+    "onCommand:nidhish-jarvis.runAgent",
+    "onCommand:nidhish-jarvis.addApiKey",
+    "onCommand:nidhish-jarvis.removeApiKey",
+    "onCommand:nidhish-jarvis.testProvider",
     "onCommand:nidhish-jarvis.openFoundationPanel",
     "onView:nidhish-jarvis.views.chat",
     "onView:nidhish-jarvis.views.workspace",
+    "onView:nidhish-jarvis.views.search",
+    "onView:nidhish-jarvis.views.files",
     "onView:nidhish-jarvis.views.memory",
     "onView:nidhish-jarvis.views.agents",
     "onView:nidhish-jarvis.views.git",
     "onView:nidhish-jarvis.views.terminal",
+    "onView:nidhish-jarvis.views.models",
     "onView:nidhish-jarvis.views.settings"
   ],
   "main": "./extension.js",
@@ -54,6 +90,14 @@
         "title": "Jarvis: Open Assistant"
       },
       {
+        "command": "nidhish-jarvis.newChat",
+        "title": "Jarvis: New Chat"
+      },
+      {
+        "command": "nidhish-jarvis.clearChat",
+        "title": "Jarvis: Clear Chat"
+      },
+      {
         "command": "nidhish-jarvis.exportHistory",
         "title": "Jarvis: Export Conversation"
       },
@@ -62,12 +106,132 @@
         "title": "Jarvis: Show Status"
       },
       {
+        "command": "nidhish-jarvis.openSettings",
+        "title": "Jarvis: Open Settings"
+      },
+      {
         "command": "nidhish-jarvis.indexWorkspace",
         "title": "Jarvis: Index Workspace"
       },
       {
+        "command": "nidhish-jarvis.reindexWorkspace",
+        "title": "Jarvis: Reindex Workspace"
+      },
+      {
         "command": "nidhish-jarvis.explainProject",
         "title": "Jarvis: Explain Project"
+      },
+      {
+        "command": "nidhish-jarvis.searchWorkspace",
+        "title": "Jarvis: Search Workspace"
+      },
+      {
+        "command": "nidhish-jarvis.findSymbol",
+        "title": "Jarvis: Find Symbol"
+      },
+      {
+        "command": "nidhish-jarvis.explainSymbol",
+        "title": "Jarvis: Explain Symbol"
+      },
+      {
+        "command": "nidhish-jarvis.findReferences",
+        "title": "Jarvis: Find References"
+      },
+      {
+        "command": "nidhish-jarvis.explainSelection",
+        "title": "Jarvis: Explain Selection"
+      },
+      {
+        "command": "nidhish-jarvis.fixSelection",
+        "title": "Jarvis: Fix Selection"
+      },
+      {
+        "command": "nidhish-jarvis.refactorSelection",
+        "title": "Jarvis: Refactor Selection"
+      },
+      {
+        "command": "nidhish-jarvis.optimizeSelection",
+        "title": "Jarvis: Optimize Selection"
+      },
+      {
+        "command": "nidhish-jarvis.generateTests",
+        "title": "Jarvis: Generate Tests"
+      },
+      {
+        "command": "nidhish-jarvis.generateDocumentation",
+        "title": "Jarvis: Generate Documentation"
+      },
+      {
+        "command": "nidhish-jarvis.reviewCode",
+        "title": "Jarvis: Review Code"
+      },
+      {
+        "command": "nidhish-jarvis.renameAcrossProject",
+        "title": "Jarvis: Rename Across Project"
+      },
+      {
+        "command": "nidhish-jarvis.updateImports",
+        "title": "Jarvis: Update Imports"
+      },
+      {
+        "command": "nidhish-jarvis.explainError",
+        "title": "Jarvis: Explain Error"
+      },
+      {
+        "command": "nidhish-jarvis.fixError",
+        "title": "Jarvis: Fix Error"
+      },
+      {
+        "command": "nidhish-jarvis.analyzeProblems",
+        "title": "Jarvis: Analyze Problems"
+      },
+      {
+        "command": "nidhish-jarvis.explainTerminalOutput",
+        "title": "Jarvis: Explain Terminal Output"
+      },
+      {
+        "command": "nidhish-jarvis.runApprovedCommand",
+        "title": "Jarvis: Run Approved Command"
+      },
+      {
+        "command": "nidhish-jarvis.explainGitChanges",
+        "title": "Jarvis: Explain Git Changes"
+      },
+      {
+        "command": "nidhish-jarvis.generateCommitMessage",
+        "title": "Jarvis: Generate Commit Message"
+      },
+      {
+        "command": "nidhish-jarvis.showGitStatus",
+        "title": "Jarvis: Show Git Status"
+      },
+      {
+        "command": "nidhish-jarvis.rememberProjectFact",
+        "title": "Jarvis: Remember Project Fact"
+      },
+      {
+        "command": "nidhish-jarvis.searchMemory",
+        "title": "Jarvis: Search Memory"
+      },
+      {
+        "command": "nidhish-jarvis.clearMemory",
+        "title": "Jarvis: Clear Memory"
+      },
+      {
+        "command": "nidhish-jarvis.runAgent",
+        "title": "Jarvis: Run Agent"
+      },
+      {
+        "command": "nidhish-jarvis.addApiKey",
+        "title": "Jarvis: Add API Key"
+      },
+      {
+        "command": "nidhish-jarvis.removeApiKey",
+        "title": "Jarvis: Remove API Key"
+      },
+      {
+        "command": "nidhish-jarvis.testProvider",
+        "title": "Jarvis: Test Provider Connection"
       },
       {
         "command": "nidhish-jarvis.openFoundationPanel",
@@ -96,6 +260,16 @@
           "type": "webview"
         },
         {
+          "id": "nidhish-jarvis.views.search",
+          "name": "Search",
+          "type": "webview"
+        },
+        {
+          "id": "nidhish-jarvis.views.files",
+          "name": "Files",
+          "type": "webview"
+        },
+        {
           "id": "nidhish-jarvis.views.memory",
           "name": "Memory",
           "type": "webview"
@@ -116,6 +290,11 @@
           "type": "webview"
         },
         {
+          "id": "nidhish-jarvis.views.models",
+          "name": "Models",
+          "type": "webview"
+        },
+        {
           "id": "nidhish-jarvis.views.settings",
           "name": "Settings",
           "type": "webview"
@@ -127,6 +306,13 @@
       "properties": {
         "jarvis.provider": {
           "type": "string",
+          "enum": [
+            "ollama",
+            "openai",
+            "openrouter",
+            "azureOpenai",
+            "custom"
+          ],
           "default": "ollama",
           "description": "Selected AI provider. Ollama is the default provider when available."
         },
@@ -147,6 +333,26 @@
           "default": "http://127.0.0.1:11434",
           "description": "Ollama server base URL for API requests."
         },
+        "jarvis.baseUrl": {
+          "type": "string",
+          "default": "",
+          "description": "Base URL for OpenAI-compatible custom providers."
+        },
+        "jarvis.azureEndpoint": {
+          "type": "string",
+          "default": "",
+          "description": "Azure OpenAI endpoint URL."
+        },
+        "jarvis.azureDeployment": {
+          "type": "string",
+          "default": "",
+          "description": "Azure OpenAI deployment name."
+        },
+        "jarvis.azureApiVersion": {
+          "type": "string",
+          "default": "2024-02-15-preview",
+          "description": "Azure OpenAI API version."
+        },
         "jarvis.temperature": {
           "type": "number",
           "default": 0.7,
@@ -165,6 +371,20 @@
           "default": true,
           "description": "Enable streaming responses from Ollama when available."
         },
+        "jarvis.indexExcludes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "Additional glob patterns Jarvis should exclude while indexing the workspace."
+        },
+        "jarvis.context.maxTokens": {
+          "type": "number",
+          "default": 3000,
+          "minimum": 256,
+          "description": "Maximum estimated context tokens Jarvis may attach to a chat request."
+        },
         "jarvis.memoryEnabled": {
           "type": "boolean",
           "default": true,
@@ -177,10 +397,66 @@
           "description": "Maximum number of conversation turns kept in history."
         }
       }
+    },
+    "submenus": [
+      {
+        "id": "nidhish-jarvis.editorMenu",
+        "label": "Jarvis"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "submenu": "nidhish-jarvis.editorMenu",
+          "group": "navigation"
+        }
+      ],
+      "nidhish-jarvis.editorMenu": [
+        {
+          "command": "nidhish-jarvis.explainSelection",
+          "group": "1_ai"
+        },
+        {
+          "command": "nidhish-jarvis.fixSelection",
+          "group": "1_ai"
+        },
+        {
+          "command": "nidhish-jarvis.refactorSelection",
+          "group": "1_ai"
+        },
+        {
+          "command": "nidhish-jarvis.optimizeSelection",
+          "group": "1_ai"
+        },
+        {
+          "command": "nidhish-jarvis.generateTests",
+          "group": "2_generate"
+        },
+        {
+          "command": "nidhish-jarvis.generateDocumentation",
+          "group": "2_generate"
+        },
+        {
+          "command": "nidhish-jarvis.reviewCode",
+          "group": "3_review"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "nidhish-jarvis.indexWorkspace",
+          "group": "nidhish-jarvis"
+        },
+        {
+          "command": "nidhish-jarvis.explainProject",
+          "group": "nidhish-jarvis"
+        }
+      ]
     }
   },
   "scripts": {
+    "build": "node --check extension.js && node --check assistantCore.js && node --check src/bootstrap.js",
     "lint": "eslint extension.js assistantCore.js src test --ignore-pattern \"**/.vscode-test/**\" --ignore-pattern \"**/node_modules/**\"",
+    "package": "vsce package --no-dependencies",
     "pretest": "npm run lint",
     "test": "node ./test/run-tests.js"
   },
@@ -191,6 +467,7 @@
     "@types/vscode": "^1.125.0",
     "@vscode/test-cli": "^0.0.15",
     "@vscode/test-electron": "^3.0.0",
+    "@vscode/vsce": "^3.9.2",
     "eslint": "^10.5.0",
     "globals": "^16.0.0"
   },

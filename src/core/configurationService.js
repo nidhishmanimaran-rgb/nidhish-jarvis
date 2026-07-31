@@ -8,10 +8,16 @@ class ConfigurationService {
       memoryEnabled: true,
       maxHistory: 50,
       featureFlags: {},
+      baseUrl: '',
+      azureEndpoint: '',
+      azureDeployment: '',
+      azureApiVersion: '2024-02-15-preview',
       'ollama.baseUrl': 'http://127.0.0.1:11434',
       temperature: 0.7,
       maxTokens: 1024,
       streaming: true,
+      indexExcludes: [],
+      'context.maxTokens': 3000,
       ...defaults,
     };
     this.values = { ...this.defaults, ...(this.storage.get?.('jarvis.config') || {}) };

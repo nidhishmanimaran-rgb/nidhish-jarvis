@@ -15,6 +15,10 @@ class ProviderRegistry {
     return this.providers.get(name);
   }
 
+  list() {
+    return [...this.providers.keys()].sort();
+  }
+
   async create(name, options = {}) {
     const Provider = this.providers.get(name);
     if (!Provider) {
