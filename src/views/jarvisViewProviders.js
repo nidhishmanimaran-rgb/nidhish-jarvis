@@ -13,15 +13,21 @@ class JarvisChatViewProvider {
   }
 
   resolveWebviewView(webviewView) {
-    const webviewManager = this.container.resolve('webviewManager');
-    const assistantHost = this.container.resolve('assistantWebviewHost');
+    try {
+      const webviewManager = this.container.resolve('webviewManager');
+      const assistantHost = this.container.resolve('assistantWebviewHost');
 
-    webviewView.webview.options = {
-      enableScripts: true,
-      localResourceRoots: [vscode.Uri.file(path.join(webviewManager.context.extensionPath, 'src', 'webview'))],
-    };
-    webviewView.webview.html = webviewManager.getAssistantHtml(webviewView.webview);
-    assistantHost.wire(webviewView);
+      webviewView.webview.options = {
+        enableScripts: true,
+        localResourceRoots: [vscode.Uri.file(path.join(webviewManager.context.extensionPath, 'src', 'webview'))],
+      };
+      webviewView.webview.html = webviewManager.getAssistantHtml(webviewView.webview);
+      assistantHost.wire(webviewView);
+    } catch (error) {
+      logViewFailure(this.container, VIEW_IDS.chat, error);
+      webviewView.webview.options = { enableScripts: false };
+      webviewView.webview.html = renderErrorHtml('Chat', error);
+    }
   }
 }
 
@@ -33,13 +39,22 @@ class JarvisSummaryViewProvider {
 
   async resolveWebviewView(webviewView) {
     webviewView.webview.options = { enableScripts: true };
-    webviewView.webview.html = await this.renderHtml(webviewView.webview);
-    webviewView.webview.onDidReceiveMessage(async (message) => {
-      const allowedCommands = new Set((this.definition.actions || []).map((action) => action.command));
-      if (message?.type === 'jarvis:command' && allowedCommands.has(message.command)) {
-        await vscode.commands.executeCommand(message.command);
-      }
-    });
+    try {
+      webviewView.webview.html = await this.renderHtml(webviewView.webview);
+      webviewView.webview.onDidReceiveMessage(async (message) => {
+        const allowedCommands = new Set((this.definition.actions || []).map((action) => action.command));
+        if (message?.type === 'jarvis:command' && allowedCommands.has(message.command)) {
+          try {
+            await vscode.commands.executeCommand(message.command);
+          } catch (error) {
+            logViewFailure(this.container, this.definition.title, error);
+          }
+        }
+      });
+    } catch (error) {
+      logViewFailure(this.container, this.definition.title, error);
+      webviewView.webview.html = renderErrorHtml(this.definition.title, error);
+    }
   }
 
   async renderHtml(webview) {
@@ -85,6 +100,46 @@ class JarvisSummaryViewProvider {
       '</html>',
     ].join('\n');
   }
+}
+
+function logViewFailure(container, viewName, error) {
+  try {
+    container.resolve('loggingService')?.error?.(`Jarvis view failed to initialize: ${viewName}`, {
+      message: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+  } catch {
+    // Avoid turning error reporting into another view initialization failure.
+  }
+}
+
+function renderErrorHtml(title, error) {
+  const message = error instanceof Error ? error.message : String(error || 'Unknown error');
+  return [
+    '<!DOCTYPE html>',
+    '<html lang="en">',
+    '<head>',
+    '  <meta charset="UTF-8" />',
+    '  <meta name="viewport" content="width=device-width, initial-scale=1.0" />',
+    `  <title>${escapeHtml(title)}</title>`,
+    '  <style>',
+    viewCss(),
+    '  </style>',
+    '</head>',
+    '<body>',
+    '  <main class="view-shell">',
+    `    <h1>${escapeHtml(title)}</h1>`,
+    '    <p class="lead">Jarvis could not initialize this view.</p>',
+    '    <section class="state">',
+    '      <div class="state-row">',
+    '        <span>Error</span>',
+    `        <strong>${escapeHtml(message)}</strong>`,
+    '      </div>',
+    '    </section>',
+    '  </main>',
+    '</body>',
+    '</html>',
+  ].join('\n');
 }
 
 function createJarvisViewProviders(container) {

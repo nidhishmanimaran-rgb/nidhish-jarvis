@@ -46,7 +46,7 @@ function createBootstrap(context) {
   container.registerFactory('settingsService', (c) => new SettingsService(c.resolve('configurationService')));
   container.registerFactory('errorHandler', (c) => new ErrorHandler(c.resolve('loggingService'), c.resolve('notificationService')));
   container.register('workspaceIntelligenceService', new WorkspaceIntelligenceService());
-  container.registerFactory('workspaceManager', (c) => new WorkspaceManager(context.workspace, c.resolve('workspaceIntelligenceService'), {
+  container.registerFactory('workspaceManager', (c) => new WorkspaceManager(vscode.workspace, c.resolve('workspaceIntelligenceService'), {
     configurationService: c.resolve('configurationService'),
     storageService: c.resolve('storageService'),
   }));
@@ -56,7 +56,7 @@ function createBootstrap(context) {
   }));
   container.registerFactory('safeEditService', () => new SafeEditService({
     fs: createVsCodeEditAdapter(vscode),
-    rootPath: context.workspace.workspaceFolders?.[0]?.uri?.fsPath || '',
+    rootPath: vscode.workspace.workspaceFolders?.[0]?.uri?.fsPath || '',
   }));
   container.registerFactory('diffPreviewService', () => new DiffPreviewService({
     vscode,
@@ -120,6 +120,21 @@ function registerViews(container) {
       webviewOptions: { retainContextWhenHidden: true },
     }));
   });
+}
+
+function runBackground(container, label, task) {
+  Promise.resolve()
+    .then(task)
+    .catch((error) => {
+      try {
+        container.resolve('loggingService')?.error?.(`Jarvis background initialization failed: ${label}`, {
+          message: error instanceof Error ? error.message : String(error),
+          stack: error instanceof Error ? error.stack : undefined,
+        });
+      } catch {
+        // Never fail activation while reporting a background startup error.
+      }
+    });
 }
 
 function registerStatusBar(container) {
@@ -808,8 +823,8 @@ function registerCommands(container) {
 function activate(context) {
   containerInstance = createBootstrap(context);
   const workspaceManager = containerInstance.resolve('workspaceManager');
-  workspaceManager.restoreIndex?.();
-  workspaceManager.startWatching?.();
+  runBackground(containerInstance, 'restore workspace index', () => workspaceManager.restoreIndex?.());
+  runBackground(containerInstance, 'start workspace watcher', () => workspaceManager.startWatching?.());
   registerViews(containerInstance);
   registerStatusBar(containerInstance);
   registerCommands(containerInstance);
@@ -831,4 +846,4 @@ function deactivate() {
   containerInstance = null;
 }
 
-module.exports = { createBootstrap, activate, deactivate };
+module.exports = { createBootstrap, registerViews, runBackground, activate, deactivate };

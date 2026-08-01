@@ -4,6 +4,13 @@ All notable changes to the "nidhish-jarvis" extension will be documented in this
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [0.1.3] - 2026-08-01
+
+- Restored explicit `onView` activation events for all Jarvis sidebar views so opening the Activity Bar container activates and registers providers reliably.
+- Hardened Jarvis sidebar webview providers to log initialization failures and render an error state instead of leaving views stuck loading.
+- Kept workspace restore/watch startup lazy and non-blocking during extension activation.
+- Added regression coverage for exact manifest/provider ID matching, no-workspace activation, provider-network independence, lazy indexing, and sidebar failure rendering.
+
 ## [0.1.2] - 2026-07-31
 
 - Added a dedicated Jarvis Activity Bar container with Chat, Workspace, Search, Files, Memory, Agents, Git, Terminal, Models, and Settings webview sections.

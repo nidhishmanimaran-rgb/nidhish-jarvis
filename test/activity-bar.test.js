@@ -31,9 +31,9 @@ suite('Activity bar integration', () => {
     assert.ok(views.every((view) => view.type === 'webview'));
   });
 
-  test('relies on generated activation events for contributed views', () => {
-    assert.strictEqual(packageManifest.activationEvents, undefined);
+  test('activates explicitly when Jarvis views are opened', () => {
     Object.values(VIEW_IDS).forEach((viewId) => {
+      assert.ok(packageManifest.activationEvents.includes(`onView:${viewId}`));
       assert.ok(packageManifest.contributes.views['nidhish-jarvis'].some((view) => view.id === viewId));
     });
   });

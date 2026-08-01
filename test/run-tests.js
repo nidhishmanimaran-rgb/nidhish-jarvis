@@ -16,6 +16,7 @@ mocha.addFile(path.join(__dirname, 'plugin-system.test.js'));
 mocha.addFile(path.join(__dirname, 'refactoring.test.js'));
 mocha.addFile(path.join(__dirname, 'safe-edit.test.js'));
 mocha.addFile(path.join(__dirname, 'security.test.js'));
+mocha.addFile(path.join(__dirname, 'sidebar-runtime.test.js'));
 mocha.addFile(path.join(__dirname, 'terminal-agent.test.js'));
 mocha.addFile(path.join(__dirname, 'workspace-intelligence.test.js'));
 

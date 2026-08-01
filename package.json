@@ -2,7 +2,7 @@
   "name": "nidhish-jarvis",
   "displayName": "Nidhish's Jarvis",
   "description": "A modular AI productivity platform for VS Code with conversation memory, planning, writing, coding, and plugin-ready extensibility.",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "publisher": "NidhishKumaran",
   "icon": "icon.png",
   "repository": {
@@ -31,6 +31,18 @@
   "categories": [
     "Machine Learning",
     "Other"
+  ],
+  "activationEvents": [
+    "onView:nidhish-jarvis.views.chat",
+    "onView:nidhish-jarvis.views.workspace",
+    "onView:nidhish-jarvis.views.search",
+    "onView:nidhish-jarvis.views.files",
+    "onView:nidhish-jarvis.views.memory",
+    "onView:nidhish-jarvis.views.agents",
+    "onView:nidhish-jarvis.views.git",
+    "onView:nidhish-jarvis.views.terminal",
+    "onView:nidhish-jarvis.views.models",
+    "onView:nidhish-jarvis.views.settings"
   ],
   "main": "./extension.js",
   "contributes": {
